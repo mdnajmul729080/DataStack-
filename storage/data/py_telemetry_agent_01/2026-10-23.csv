@@ -1,0 +1,4 @@
+clientId,eventId,timestamp,payload
+py_telemetry_agent_01,evt_seed_001,2026-10-23T06:00:00.000Z,"{""action"":""agent_boot"",""cpu"":18.4,""ram_mb"":512,""status"":""nominal""}"
+py_telemetry_agent_01,evt_seed_002,2026-10-23T06:15:00.000Z,"{""action"":""heartbeat"",""cpu"":22.1,""ram_mb"":524,""status"":""nominal""}"
+py_telemetry_agent_01,evt_seed_003,2026-10-23T06:30:00.000Z,"{""action"":""batch_processed"",""items_count"":142,""latency_ms"":18}"

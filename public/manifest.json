@@ -1,0 +1,21 @@
+{
+  "name": "DataStack - Realtime Data Platform",
+  "short_name": "DataStack",
+  "description": "Self-hosted universal realtime data collection engine",
+  "start_url": "/vcon/dashboard",
+  "display": "standalone",
+  "background_color": "#0b0f17",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

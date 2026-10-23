@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// CRITICAL: PostgreSQL is ONLY for Admin / Config / SDK Registration — NOT for collected data.
+// All collected data is strictly written to CSV files in /storage/data/{clientId}/{YYYY-MM-DD}.csv
+
+model ClientSDK {
+  id          String   @id @default(cuid())
+  clientId    String   @unique
+  name        String
+  secret      String
+  rateLimit   Int      @default(100) // Max events per second
+  status      String   @default("active") // active | revoked
+  totalEvents BigInt   @default(0)
+  lastActive  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  apiKeys     ApiKey[]
+
+  @@map("client_sdks")
+}
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  clientId    String
+  client      ClientSDK @relation(fields: [clientId], references: [clientId], onDelete: Cascade)
+  keyHash     String
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@map("api_keys")
+}
+
+model AdminSettings {
+  id                    String   @id @default("default")
+  serverPort            Int      @default(4000)
+  webPort               Int      @default(3000)
+  maxEventsPerSec       Int      @default(100)
+  maxPayloadSizeKb      Int      @default(100)
+  batchFlushThreshold   Int      @default(500)
+  batchFlushIntervalMs  Int      @default(2000)
+  fileRotationMb        Int      @default(100)
+  jwtSecret             String
+  enableIdempotency     Boolean  @default(true)
+  autoPruneDays         Int      @default(30)
+  updatedAt             DateTime @updatedAt
+
+  @@map("admin_settings")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  actor     String
+  details   String?  // JSON string
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}

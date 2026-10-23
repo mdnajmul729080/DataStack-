@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Next.js Frontend & Admin Console (Port 3000)
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATASTACK_JWT_SECRET=datastack-universal-secret-key-2026
+      - DATABASE_URL=postgresql://datastack:securepass@postgres:5432/datastack_db
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - postgres
+
+  # Express + Socket.IO Ingestion Engine (Port 4000)
+  ingestion:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.server
+    ports:
+      - "4000:4000"
+    volumes:
+      - ../storage:/app/storage
+    environment:
+      - NODE_ENV=production
+      - PORT_SOCKET=4000
+      - DATASTACK_JWT_SECRET=datastack-universal-secret-key-2026
+      - REDIS_URL=redis://redis:6379
+    restart: unless-stopped
+    depends_on:
+      - redis
+
+  # Redis In-Memory Buffer Broker
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  # PostgreSQL for Admin Metadata Only (NOT collected data)
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=datastack
+      - POSTGRES_PASSWORD=securepass
+      - POSTGRES_DB=datastack_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

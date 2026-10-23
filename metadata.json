@@ -1,0 +1,6 @@
+{
+  "name": "DataStack - Realtime Data Collection Platform",
+  "description": "Self-hosted universal realtime data collection engine with Socket.IO ingestion, Redis buffer, JWT client auth, CSV batch rotation, and /vcon/ admin panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
